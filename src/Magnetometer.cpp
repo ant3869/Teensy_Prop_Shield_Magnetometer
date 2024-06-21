@@ -1,5 +1,4 @@
 #include "Magnetometer.h"
-#include "i2c_t3.h"
 
 #define FXOS8700CQ_ADDRESS 0x1E
 #define FXOS8700CQ_WHO_AM_I 0x0D
@@ -21,8 +20,9 @@
 
 Magnetometer::Magnetometer() {}
 
-void Magnetometer::begin(uint8_t i2cPins, uint32_t i2cRate) {
-  Wire.begin(I2C_MASTER, 0x00, i2cPins, I2C_PULLUP_EXT, i2cRate);
+void Magnetometer::begin(uint32_t i2cRate) {
+  Wire.begin();
+  Wire.setClock(i2cRate);
   initialize();
   magOffset();
 }
@@ -103,12 +103,12 @@ void Magnetometer::magOffset() {
 
 void Magnetometer::standby() {
   byte c = readByte(FXOS8700CQ_ADDRESS, 0x2A);
-  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_CTRL_REG1, c & ~(0x01));
+  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, c & ~(0x01));
 }
 
 void Magnetometer::activate() {
   byte c = readByte(FXOS8700CQ_ADDRESS, 0x2A);
-  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_CTRL_REG1, c | 0x01);
+  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, c | 0x01);
 }
 
 void Magnetometer::initialize() {
