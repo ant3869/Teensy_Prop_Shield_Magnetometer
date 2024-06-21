@@ -8,12 +8,11 @@ class Magnetometer {
 public:
     Magnetometer();
 
-    // Initialize the magnetometer with specified I2C pins and rate
-    void begin(uint8_t i2cPins = I2C_PINS_18_19, uint32_t i2cRate = I2C_RATE_400);
+    // Initialize the magnetometer with the default I2C rate
+    void begin(uint32_t i2cRate = 400000); // Default rate is 400kHz
 
     void update();
 
-    // Get the X, Y, and Z magnetic field values
     float getX();
     float getY();
     float getZ();
@@ -22,18 +21,10 @@ public:
 
 private:
     void initialize();
-
     void standby();
-
     void activate();
-
-    // Calculate and set the magnetometer offset
     void magOffset();
-
-    // Read raw magnetometer data
     void readMagData(int16_t *destination);
-
-    // Write bias values to the magnetometer
     void writeMagBias(uint8_t address, int16_t *bias);
 
     // Utility functions for I2C communication
