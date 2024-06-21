@@ -68,7 +68,7 @@ void Magnetometer::magOffset() {
     standby();
 
     readMagData(mag_temp);
-    readByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_STATUS);
+    readByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_DR_STATUS);
 
     writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, magOSR << 2 | 0x03);
     activate();
@@ -145,18 +145,18 @@ uint8_t Magnetometer::readByte(uint8_t address, uint8_t subAddress) {
     uint8_t data;
     Wire.beginTransmission(address);
     Wire.write(subAddress);
-    uint8_t error = Wire.endTransmission(I2C_NOSTOP);
+    uint8_t error = Wire.endTransmission(false); // Use false for repeated start condition
     if (error != 0) {
         Serial.print("I2C write error: ");
         Serial.println(error);
-        return 0; // Return 0 in case of error
+        return 0;
     }
     Wire.requestFrom(address, (size_t)1);
     if (Wire.available()) {
         data = Wire.read();
     } else {
         Serial.println("I2C read error: No data available");
-        data = 0; // Return 0 in case of error
+        data = 0;
     }
     return data;
 }
@@ -164,11 +164,11 @@ uint8_t Magnetometer::readByte(uint8_t address, uint8_t subAddress) {
 void Magnetometer::readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t *dest) {
     Wire.beginTransmission(address);
     Wire.write(subAddress);
-    uint8_t error = Wire.endTransmission(I2C_NOSTOP);
+    uint8_t error = Wire.endTransmission(false); // Use false for repeated start condition
     if (error != 0) {
         Serial.print("I2C write error: ");
         Serial.println(error);
-        return; // Return in case of error
+        return;
     }
     Wire.requestFrom(address, (size_t)count);
     if (Wire.available() == count) {
