@@ -1,6 +1,8 @@
 #include "Magnetometer.h"
 
-Magnetometer::Magnetometer() {}
+Magnetometer::Magnetometer() : magHistoryIndex(0), magValue(0.0) {
+    memset(magSensorHistory, 0, sizeof(magSensorHistory));
+}
 
 void Magnetometer::begin(uint32_t i2cRate) {
     Wire.begin();
@@ -26,6 +28,25 @@ float Magnetometer::getY() { return my; }
 float Magnetometer::getZ() { return mz; }
 
 void Magnetometer::calibrate() { magOffset(); }
+
+void Magnetometer::readMagSensor() {
+    update();
+    float magneticFieldMagnitude = sqrt(mx * mx + my * my + mz * mz);
+
+    magSensorHistory[magHistoryIndex] = magneticFieldMagnitude;
+    magHistoryIndex = (magHistoryIndex + 1) % NUM_SAMPLES;
+
+    float sum = 0;
+    for (uint8_t i = 0; i < NUM_SAMPLES; i++) {
+        sum += magSensorHistory[i];
+    }
+
+    magValue = sum / NUM_SAMPLES;
+}
+
+float Magnetometer::getMagValue() {
+    return magValue;
+}
 
 void Magnetometer::readMagData(int16_t *destination) {
     uint8_t rawData[6];
@@ -106,7 +127,6 @@ bool Magnetometer::initialize() {
     writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, magOSR << 2 | 0x03);
     activate();
     
-    // Check connection
     return checkConnection();
 }
 
