@@ -1,0 +1,69 @@
+= Magnetometer Library
+
+This library provides an interface to the FXOS8700CQ magnetometer for Arduino-compatible boards.
+
+== Installation
+
+To install this library:
+
+1. Download the library.
+2. Extract the contents to the `libraries` folder of your Arduino IDE.
+3. Restart the Arduino IDE.
+
+== Usage
+
+Include the library in your sketch and create an instance of the `Magnetometer` class:
+
+```cpp
+#include <Wire.h>
+#include "Magnetometer.h"
+
+Magnetometer mag;
+
+void setup() {
+  Serial.begin(38400);
+  delay(5000);
+  
+  mag.begin();
+  Serial.println("Magnetometer initialized.");
+}
+
+void loop() {
+  mag.update();
+  Serial.print("X: ");
+  Serial.print(mag.getX());
+  Serial.print(" Y: ");
+  Serial.print(mag.getY());
+  Serial.print(" Z: ");
+  Serial.println(mag.getZ());
+  
+  delay(500);
+}
+
+== Examples
+
+The library comes with example sketches to help you get started. Check the examples folder for more information.
+
+== API Reference
+
+void begin(uint8_t i2cPins = I2C_PINS_18_19, uint32_t i2cRate = I2C_RATE_400);
+
+Initializes the magnetometer with specified I2C pins and rate.
+void update();
+
+Updates the magnetometer data.
+float getX();
+
+Returns the X-axis magnetic field value.
+float getY();
+
+Returns the Y-axis magnetic field value.
+float getZ();
+
+Returns the Z-axis magnetic field value.
+void calibrate();
+
+Calibrates the magnetometer.
+== License
+
+This library is licensed under the MIT License.
