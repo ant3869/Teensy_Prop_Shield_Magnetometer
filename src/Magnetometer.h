@@ -36,6 +36,7 @@ public:
     void calibrate();
     void readMagSensor(); // Update to handle averaging internally
     float getMagValue();  // Method to get the averaged magnetic field magnitude
+    bool checkConnection();
 
 private:
     void initialize();
@@ -47,7 +48,6 @@ private:
     void writeByte(uint8_t address, uint8_t subAddress, uint8_t data);
     uint8_t readByte(uint8_t address, uint8_t subAddress);
     void readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t *dest);
-    bool checkConnection();
 
     int16_t magCount[3]; // Raw magnetometer data
     float mx, my, mz;    // Magnetometer values in milliGauss
