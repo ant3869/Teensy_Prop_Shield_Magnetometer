@@ -36,10 +36,10 @@ public:
     void calibrate();
     void readMagSensor(); // Update to handle averaging internally
     float getMagValue();  // Method to get the averaged magnetic field magnitude
+    bool initialize();
     bool checkConnection();
 
 private:
-    void initialize();
     void standby();
     void activate();
     void magOffset();
