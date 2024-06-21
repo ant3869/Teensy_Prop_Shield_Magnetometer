@@ -4,9 +4,6 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#define FXOS8700CQ_ADDRESS 0x1E
-#define FXOS8700CQ_WHO_AM_I 0x0D
-
 class Magnetometer {
 public:
     Magnetometer();
@@ -21,6 +18,8 @@ public:
     float getZ();
 
     void calibrate();
+
+    bool checkConnection();
 
 private:
     void initialize();
