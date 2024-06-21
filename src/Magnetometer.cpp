@@ -90,12 +90,12 @@ void Magnetometer::magOffset() {
 
 void Magnetometer::standby() {
   byte c = readByte(FXOS8700CQ_ADDRESS, 0x2A);
-  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_CTRL_REG1, c & ~(0x01));
+  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, c & ~(0x01));
 }
 
 void Magnetometer::activate() {
   byte c = readByte(FXOS8700CQ_ADDRESS, 0x2A);
-  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_CTRL_REG1, c | 0x01);
+  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, c | 0x01);
 }
 
 void Magnetometer::initialize() {
