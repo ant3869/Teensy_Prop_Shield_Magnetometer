@@ -148,3 +148,8 @@ void Magnetometer::writeMagBias(uint8_t address, int16_t *bias) {
   writeByte(address, FXOS8700CQ_M_OFF_Z_MSB, ((bias[2] << 1) & 0xFF00) >> 8);
   writeByte(address, FXOS8700CQ_M_OFF_Z_LSB, (bias[2] << 1) & 0x00FF);
 }
+
+bool Magnetometer::checkConnection() {
+    uint8_t whoAmI = readByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_WHO_AM_I);
+    return (whoAmI == 0xC7);
+}
