@@ -52,9 +52,10 @@ void Magnetometer::readMagData(int16_t *destination) {
 
 void Magnetometer::magOffset() {
   uint16_t ii = 0, sample_count = 0;
-  int16_t mag_bias[3] = {0, 0, 0}, mag_scale[3] = {0, 0, 0};
-  int16_t mag_max[3] = {INT16_MIN, INT16_MIN, INT16_MIN}, mag_min[3] = {INT16_MAX, INT16_MAX, INT16_MAX}, mag_temp[3] = {0, 0, 0};
-  float dest1[3] = {0, 0, 0}, dest2[3] = {0, 0, 0};
+  int16_t mag_bias[3] = {0, 0, 0};
+  int16_t mag_max[3] = {INT16_MIN, INT16_MIN, INT16_MIN};
+  int16_t mag_min[3] = {INT16_MAX, INT16_MAX, INT16_MAX};
+  int16_t mag_temp[3] = {0, 0, 0};
 
   Serial.println("Mag Calibration: Wave device in a figure eight until done!");
   delay(4000);
@@ -81,20 +82,6 @@ void Magnetometer::magOffset() {
   mag_bias[1] = (mag_max[1] + mag_min[1]) / 2;
   mag_bias[2] = (mag_max[2] + mag_min[2]) / 2;
 
-  dest1[0] = (float)mag_bias[0] * mRes;
-  dest1[1] = (float)mag_bias[1] * mRes;   
-  dest1[2] = (float)mag_bias[2] * mRes;
-
-  mag_scale[0] = (mag_max[0] - mag_min[0]) / 2;
-  mag_scale[1] = (mag_max[1] - mag_min[1]) / 2;
-  mag_scale[2] = (mag_max[2] - mag_min[2]) / 2;
-
-  float avg_rad = (mag_scale[0] + mag_scale[1] + mag_scale[2]) / 3.0;
-
-  dest2[0] = avg_rad / ((float)mag_scale[0]);
-  dest2[1] = avg_rad / ((float)mag_scale[1]);
-  dest2[2] = avg_rad / ((float)mag_scale[2]);
-
   writeMagBias(FXOS8700CQ_ADDRESS, mag_bias);
   Serial.println("Mag Calibration done!");
 
@@ -103,12 +90,12 @@ void Magnetometer::magOffset() {
 
 void Magnetometer::standby() {
   byte c = readByte(FXOS8700CQ_ADDRESS, 0x2A);
-  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, c & ~(0x01));
+  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_CTRL_REG1, c & ~(0x01));
 }
 
 void Magnetometer::activate() {
   byte c = readByte(FXOS8700CQ_ADDRESS, 0x2A);
-  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_M_CTRL_REG1, c | 0x01);
+  writeByte(FXOS8700CQ_ADDRESS, FXOS8700CQ_CTRL_REG1, c | 0x01);
 }
 
 void Magnetometer::initialize() {
